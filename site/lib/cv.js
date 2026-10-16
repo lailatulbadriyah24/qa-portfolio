@@ -37,9 +37,10 @@ export const education = {
   period: "2021 – 2025",
   gpa: "IPK 3,95 / 4,00",
   achievements: [
-    "5 kali juara lomba software development tingkat nasional",
+    "Juri Project Innovation pada MaFIA Inclusive Bootcamp 2025 yang diselenggarakan Universitas Brawijaya",
     "Mahasiswa Berprestasi Jurusan Teknologi Informasi 2024 dan 2025",
-    "Juara 3 bidang IoT, KMIPN 2024",
+    "HAKI: Greeny, inovasi sistem pintar untuk pertanian perkotaan dengan pendekatan gamifikasi, IoT, dan AR",
+    "5 kali juara lomba software development tingkat nasional",
   ],
 };
 
