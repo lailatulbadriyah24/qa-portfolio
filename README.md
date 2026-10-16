@@ -8,7 +8,7 @@ A complete, small-scale QA workflow on a public API: planning and test design, a
 
 | Part | What it shows | Where |
 |---|---|---|
-| **1. Test documentation** | Test plan, scenarios, 31 test cases, traceability, 7 bug reports | [`1-test-scenario/`](1-test-scenario) |
+| **1. Test documentation** | Test plan, scenarios, 29 test cases, traceability, 7 bug reports | [`1-test-scenario/`](1-test-scenario) |
 | **2. API automation (Postman + Newman)** | 22 requests, 41 assertions, schema checks, token chaining, data-driven testing, HTML report | [`2-postman/`](2-postman) |
 | **3. Performance testing (k6)** | Smoke, load and stress scripts with thresholds, results and analysis | [`3-k6-performance/`](3-k6-performance) |
 | **CI** | GitHub Actions runs Newman and the k6 smoke test on every push | [`.github/workflows/ci.yml`](.github/workflows/ci.yml) |
@@ -45,3 +45,16 @@ k6 run 3-k6-performance/smoke.js
 ## Tools
 
 Postman, Newman (+ htmlextra reporter), k6, Node.js, GitHub Actions.
+
+## Website
+
+`site/` is a Next.js static site that renders this portfolio (bug reports, test cases, Postman and k6 results) straight from the files above, so it never drifts from the source.
+
+```bash
+cd site
+npm install
+npm run dev      # http://localhost:3000
+npm run build    # static export to site/out
+```
+
+It deploys to GitHub Pages through `.github/workflows/pages.yml`. In the repository settings, set **Pages > Source** to **GitHub Actions** once.

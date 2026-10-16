@@ -1,2 +1,7 @@
 node_modules/
 2-postman/reports/
+site/node_modules/
+site/.next/
+site/out/
+site/dev.log
+site/AGENTS.md
