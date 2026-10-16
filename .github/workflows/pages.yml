@@ -1,3 +1,4 @@
+# Builds site/ and deploys it to GitHub Pages (Settings > Pages > Source: GitHub Actions).
 name: Deploy site
 
 on:
