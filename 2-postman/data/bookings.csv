@@ -1,0 +1,5 @@
+firstname,lastname,totalprice,depositpaid,checkin,checkout
+Alice,Johnson,120,true,2026-11-01,2026-11-03
+Budi,Santoso,350,false,2026-12-10,2026-12-15
+Citra,Dewi,90,true,2027-01-05,2027-01-06
+Dimas,Pratama,0,false,2027-02-01,2027-02-02

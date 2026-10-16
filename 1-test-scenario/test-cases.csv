@@ -1,0 +1,30 @@
+ID,Scenario,Module,Title,Type,Priority,Preconditions,Steps,Expected Result,Actual Result,Status,Automated
+TC-AUTH-01,TS-AUTH-01,Auth,Login with valid credentials,Positive,P1,API is up,"POST /auth with {username:admin,password:password123}",200 and a non-empty token,200 and token returned,Pass,Postman
+TC-AUTH-02,TS-AUTH-02,Auth,Login with wrong password,Negative,P1,API is up,"POST /auth with a wrong password",401 and no token,200 with {reason:Bad credentials} and no token (see BUG-006),Fail (known),Postman
+TC-AUTH-03,TS-AUTH-03,Auth,Login with empty body,Negative,P2,API is up,"POST /auth with {}",4xx and no token,200 with {reason:Bad credentials} and no token (see BUG-006),Fail (known),Postman
+TC-CRT-01,TS-CRT-01,Booking,Create booking with valid data,Positive,P1,Accept header set,"POST /booking with a complete valid body",200 and bookingid; response echoes the data,200; bookingid returned and data echoed,Pass,Postman
+TC-CRT-02,TS-CRT-07,Booking,Create booking without Accept header,Negative,P3,None,"POST /booking without Accept: application/json",Request still processed or clear 4xx,418 I'm a teapot,Pass (documented behaviour),Postman
+TC-CRT-03,TS-CRT-03,Booking,Create booking with missing required fields,Negative,P1,Accept header set,"POST /booking with {firstname:OnlyName}",400 Bad Request,500 Internal Server Error (see BUG-005),Fail (known),Postman
+TC-CRT-04,TS-CRT-02,Booking,Create booking without optional additionalneeds,Positive,P2,Accept header set,"POST /booking without additionalneeds",200 and bookingid,200 and bookingid,Pass,Postman
+TC-CRT-05,TS-CRT-04,Booking,Create booking with negative totalprice,Boundary,P1,Accept header set,"POST /booking with totalprice -100",4xx rejection,200; booking stored with -100 (see BUG-001),Fail,Postman (defects folder)
+TC-CRT-06,TS-CRT-04,Booking,Create booking with checkout before checkin,Boundary,P1,Accept header set,"POST /booking with checkin 2026-11-10 and checkout 2026-11-01",4xx rejection,200; booking stored (see BUG-002),Fail,Postman (defects folder)
+TC-CRT-07,TS-CRT-06,Booking,Create booking with empty firstname,Boundary,P2,Accept header set,"POST /booking with firstname empty",4xx rejection,200; booking stored with empty name (see BUG-003),Fail,Postman (defects folder)
+TC-CRT-08,TS-CRT-05,Booking,Create booking with non-numeric totalprice,Negative,P1,Accept header set,"POST /booking with totalprice abc",4xx rejection,200; totalprice stored as null (see BUG-004),Fail,Postman (defects folder)
+TC-CRT-09,TS-CRT-05,Booking,Create booking with malformed date,Negative,P1,Accept header set,"POST /booking with checkin not-a-date",4xx rejection,200; checkin stored as 0NaN-aN-aN (see BUG-004),Fail,Postman (defects folder)
+TC-CRT-10,TS-CRT-06,Booking,Create booking with HTML/script in firstname,Security,P2,Accept header set,"POST /booking with firstname <script>alert(1)</script>",Input sanitised or rejected,200; value stored and returned unchanged (API-only; risk if rendered by a UI),Observation,Manual
+TC-CRT-11,TS-CRT-06,Booking,Create booking with a 10 000 character lastname,Boundary,P3,Accept header set,"POST /booking with a very long lastname",Rejected or truncated with clear message,Not executed,Not run,Manual
+TC-GET-01,TS-GET-01,Booking,Get booking by id,Positive,P1,A booking exists,"GET /booking/{id}",200 and body matches schema,200; schema valid,Pass,Postman
+TC-GET-02,TS-GET-02,Booking,Get non-existent booking,Negative,P1,None,"GET /booking/999999999",404,404,Pass,Postman
+TC-GET-03,TS-GET-02,Booking,Get booking with non-numeric id,Negative,P3,None,"GET /booking/abc",400 or 404,404,Pass,Postman
+TC-GET-04,TS-GET-03,Booking,List all bookings,Positive,P1,None,"GET /booking",200 and array of {bookingid},200; array returned,Pass,Postman
+TC-GET-05,TS-GET-04,Booking,Filter bookings by firstname,Positive,P2,A booking with firstname Laila exists,"GET /booking?firstname=Laila",200 and result includes the booking,200; booking included,Pass,Postman
+TC-GET-06,TS-GET-04,Booking,Filter bookings by checkin date,Positive,P3,None,"GET /booking?checkin=2026-11-01",200 and bookings with checkin on/after that date,200; array returned,Pass,Manual
+TC-UPD-01,TS-UPD-01,Booking,Full update (PUT) with valid token,Positive,P1,Valid token and booking,"PUT /booking/{id} with Cookie token and full body",200 and all fields replaced,200; fields replaced,Pass,Postman
+TC-UPD-02,TS-UPD-03,Booking,PUT without token,Security,P1,A booking exists,"PUT /booking/{id} without Cookie",403,403,Pass,Postman
+TC-UPD-03,TS-UPD-03,Booking,PUT with invalid token,Security,P1,A booking exists,"PUT /booking/{id} with Cookie token=invalid-token",403,403,Pass,Postman
+TC-UPD-04,TS-UPD-02,Booking,Partial update (PATCH),Positive,P1,Valid token and booking,"PATCH /booking/{id} with {firstname:Patched}",200; only firstname changes,200; only firstname changed,Pass,Postman
+TC-UPD-05,TS-UPD-03,Booking,PATCH without token,Security,P1,A booking exists,"PATCH /booking/{id} without Cookie",403,403,Pass,Postman
+TC-DEL-01,TS-DEL-02,Booking,Delete without token,Security,P1,A booking exists,"DELETE /booking/{id} without Cookie",403 and booking remains,403,Pass,Postman
+TC-DEL-02,TS-DEL-01,Booking,Delete with valid token,Positive,P1,Valid token and booking,"DELETE /booking/{id} with Cookie",200 or 204,201 Created (see BUG-007),Pass (documented behaviour),Postman
+TC-DEL-03,TS-DEL-01,Booking,Deleted booking cannot be fetched,Positive,P1,Booking deleted,"GET /booking/{id}",404,404,Pass,Postman
+TC-DEL-04,TS-DEL-03,Booking,Delete the same booking twice,Negative,P2,Booking already deleted,"DELETE /booking/{id} again",404,405 Method Not Allowed (see BUG-007),Fail (known),Postman
