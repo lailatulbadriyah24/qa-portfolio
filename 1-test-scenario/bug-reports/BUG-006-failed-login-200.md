@@ -1,15 +1,15 @@
-# BUG-006 - Failed login returns `200 OK` instead of `401`
+# BUG-006 - Login gagal mengembalikan `200 OK`, bukan `401`
 
 | | |
 |---|---|
-| **Severity / Priority** | Minor / P2 |
-| **Status** | Open |
-| **Environment** | https://restful-booker.herokuapp.com (public demo) |
-| **Related test cases** | TC-AUTH-02, TC-AUTH-03 |
+| **Severity / Prioritas** | Minor / P2 |
+| **Status** | Terbuka |
+| **Lingkungan** | https://restful-booker.herokuapp.com (demo publik) |
+| **Test case terkait** | TC-AUTH-02, TC-AUTH-03 |
 
-## Steps to reproduce
+## Langkah reproduksi
 
-1. Send:
+1. Kirim:
    ```http
    POST /auth
    Content-Type: application/json
@@ -17,18 +17,18 @@
    { "username": "admin", "password": "wrong" }
    ```
 
-## Expected result
+## Hasil yang diharapkan
 
 `401 Unauthorized`.
 
-## Actual result
+## Hasil aktual
 
-`200 OK` with body `{"reason":"Bad credentials"}` (no token). An empty body `{}` behaves the same.
+`200 OK` dengan body `{"reason":"Bad credentials"}` (tanpa token). Body kosong `{}` menghasilkan perilaku yang sama.
 
-## Impact
+## Dampak
 
-Clients and API gateways that treat `2xx` as success may misinterpret a failed login. Failed-login monitoring and rate limiting based on status codes will not work.
+Client dan API gateway yang menganggap `2xx` sebagai sukses bisa salah menafsirkan login yang gagal. Pemantauan login gagal dan rate limiting yang berbasis status code tidak akan berfungsi.
 
-## Suggested fix
+## Saran perbaikan
 
-Return `401 Unauthorized` for invalid credentials and `400` for a malformed request.
+Kembalikan `401 Unauthorized` untuk kredensial yang tidak valid dan `400` untuk permintaan yang formatnya salah.

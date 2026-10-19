@@ -6,9 +6,11 @@
   "scripts": {
     "test:api": "newman run 2-postman/RestfulBooker.postman_collection.json -e 2-postman/environments/public-demo.postman_environment.json --folder \"0. Health\" --folder \"1. Auth\" --folder \"2. Booking - Create\" --folder \"3. Booking - Read\" --folder \"4. Booking - Update\" --folder \"5. Booking - Delete\" -r cli,htmlextra --reporter-htmlextra-export 2-postman/reports/api-report.html",
     "test:api:data": "newman run 2-postman/RestfulBooker.postman_collection.json -e 2-postman/environments/public-demo.postman_environment.json -d 2-postman/data/bookings.csv --folder \"6. Data-driven - Create booking from CSV\"",
-    "test:api:defects": "newman run 2-postman/RestfulBooker.postman_collection.json -e 2-postman/environments/public-demo.postman_environment.json --folder \"1. Auth\" --folder \"7. Known defects (expected to fail)\""
+    "test:api:defects": "newman run 2-postman/RestfulBooker.postman_collection.json -e 2-postman/environments/public-demo.postman_environment.json --folder \"1. Auth\" --folder \"7. Known defects (expected to fail)\"",
+    "sheet": "node scripts/build-test-sheet.mjs"
   },
   "devDependencies": {
+    "exceljs": "^4.4.0",
     "newman": "^6.2.1",
     "newman-reporter-htmlextra": "^1.23.1"
   }

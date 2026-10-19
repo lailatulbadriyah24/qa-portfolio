@@ -1,60 +1,61 @@
-# QA Portfolio - Restful-Booker API
+# Portofolio QA - Restful-Booker API
 
-A complete, small-scale QA workflow on a public API: planning and test design, automated API testing, and performance testing.
+Alur kerja QA yang lengkap dalam skala kecil pada sebuah API publik: perencanaan dan desain tes, pengujian API otomatis, dan pengujian performa.
 
-**Target system:** [Restful-Booker](https://restful-booker.herokuapp.com), a public hotel-booking demo API built for testing practice.
+**Sistem yang diuji:** [Restful-Booker](https://restful-booker.herokuapp.com), API demo pemesanan hotel yang terbuka untuk umum dan dibuat untuk latihan testing.
 
-## Contents
+## Isi
 
-| Part | What it shows | Where |
+| Bagian | Yang diperlihatkan | Lokasi |
 |---|---|---|
-| **1. Test documentation** | Test plan, scenarios, 29 test cases, traceability, 7 bug reports | [`1-test-scenario/`](1-test-scenario) |
-| **2. API automation (Postman + Newman)** | 22 requests, 41 assertions, schema checks, token chaining, data-driven testing, HTML report | [`2-postman/`](2-postman) |
-| **3. Performance testing (k6)** | Smoke, load and stress scripts with thresholds, results and analysis | [`3-k6-performance/`](3-k6-performance) |
-| **CI** | GitHub Actions runs Newman and the k6 smoke test on every push | [`.github/workflows/ci.yml`](.github/workflows/ci.yml) |
+| **1. Dokumentasi pengujian** | Rencana pengujian, skenario, 29 test case, keterlacakan, 7 laporan bug, sheet Excel test case | [`1-test-scenario/`](1-test-scenario) |
+| **2. Otomasi API (Postman + Newman)** | 22 request, 41 assertion, pengecekan schema, token chaining, data-driven testing, laporan HTML | [`2-postman/`](2-postman) |
+| **3. Pengujian performa (k6)** | Skrip smoke, load, dan stress dengan threshold, hasil, dan analisis | [`3-k6-performance/`](3-k6-performance) |
+| **CI** | GitHub Actions menjalankan Newman dan k6 smoke test di setiap push | [`.github/workflows/ci.yml`](.github/workflows/ci.yml) |
 
-## Key findings
+## Temuan utama
 
-Testing found that the API has almost no input validation:
+Pengujian menemukan bahwa API ini hampir tidak punya validasi input:
 
-- Negative prices, checkout-before-checkin dates, empty names, and non-numeric values are accepted (BUG-001..004). Some are silently corrupted, for example `"abc"` becomes `null` and `"not-a-date"` becomes `"0NaN-aN-aN"`.
-- Missing required fields cause a `500` instead of `400` (BUG-005).
-- A failed login returns `200 OK` (BUG-006).
-- Write operations are correctly protected: all unauthenticated or invalid-token `PUT`/`PATCH`/`DELETE` calls return `403`.
+- Harga negatif, tanggal checkout sebelum checkin, nama kosong, dan nilai bukan angka diterima begitu saja (BUG-001..004). Sebagian rusak diam-diam, misalnya `"abc"` menjadi `null` dan `"not-a-date"` menjadi `"0NaN-aN-aN"`.
+- Field wajib yang hilang menyebabkan `500`, bukan `400` (BUG-005).
+- Login yang gagal mengembalikan `200 OK` (BUG-006).
+- Operasi tulis sudah terlindungi dengan benar: semua `PUT`/`PATCH`/`DELETE` tanpa autentikasi atau dengan token tidak valid mengembalikan `403`.
 
-Full details are in [`1-test-scenario/bug-reports/`](1-test-scenario/bug-reports).
+Rincian lengkapnya ada di [`1-test-scenario/bug-reports/`](1-test-scenario/bug-reports).
 
-## Quick start
+## Memulai
 
-Requirements: Node.js 18+ and [k6](https://grafana.com/docs/k6/latest/set-up/install-k6/).
+Kebutuhan: Node.js 18+ dan [k6](https://grafana.com/docs/k6/latest/set-up/install-k6/).
 
 ```bash
 npm install
-npm run test:api          # Postman regression suite via Newman (HTML report in 2-postman/reports/)
-npm run test:api:data     # data-driven run
-npm run test:api:defects  # known defects, fails by design
+npm run test:api          # regression suite Postman lewat Newman (laporan HTML di 2-postman/reports/)
+npm run test:api:data     # run data-driven
+npm run test:api:defects  # known defect, gagal dengan sengaja
+npm run sheet             # membuat ulang 1-test-scenario/test-cases.xlsx dari CSV, skenario, dan laporan bug
 k6 run 3-k6-performance/smoke.js
 ```
 
-## Approach
+## Pendekatan
 
-- **Design first**: scenarios -> test cases -> automation, with IDs that trace through all three (for example `TC-CRT-01` exists in the CSV and in the collection).
-- **Stable vs. known-defect tests**: assertions for bugs live in a separate folder so the regression suite stays green and meaningful.
-- **Responsible load testing**: the target is a shared public server, so load is capped at 10 virtual users and every script cleans up the data it creates.
+- **Desain dulu**: skenario -> test case -> otomasi, dengan ID yang bisa ditelusuri di ketiganya (misalnya `TC-CRT-01` ada di CSV dan di collection).
+- **Tes stabil vs. known defect**: assertion untuk bug ditaruh di folder terpisah supaya regression suite tetap hijau dan bermakna.
+- **Load test yang bertanggung jawab**: targetnya server publik yang dipakai bersama, jadi beban dibatasi 10 virtual user dan setiap skrip membersihkan data yang dibuatnya.
 
-## Tools
+## Alat
 
-Postman, Newman (+ htmlextra reporter), k6, Node.js, GitHub Actions.
+Postman, Newman (+ reporter htmlextra), k6, Node.js, GitHub Actions.
 
 ## Website
 
-`site/` is a Next.js static site that renders this portfolio (bug reports, test cases, Postman and k6 results) straight from the files above, so it never drifts from the source.
+`site/` adalah situs statis Next.js yang menampilkan portofolio ini (laporan bug, test case, hasil Postman dan k6) langsung dari file-file di atas, sehingga isinya tidak pernah berbeda dari sumbernya.
 
 ```bash
 cd site
 npm install
 npm run dev      # http://localhost:3000
-npm run build    # static export to site/out
+npm run build    # ekspor statis ke site/out
 ```
 
-It deploys to GitHub Pages through `.github/workflows/pages.yml`. In the repository settings, set **Pages > Source** to **GitHub Actions** once.
+Situs ini di-deploy ke GitHub Pages lewat `.github/workflows/pages.yml`. Di pengaturan repository, atur **Pages > Source** ke **GitHub Actions** (cukup sekali).

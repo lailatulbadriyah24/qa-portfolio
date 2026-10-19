@@ -31,15 +31,24 @@ function parseCsv(text) {
   return body.map((r) => Object.fromEntries(head.map((h, i) => [h, r[i] ?? ""])));
 }
 
+// The CSV headers are in Indonesian; the rest of the code uses these stable keys.
+const CSV_KEYS = {
+  Skenario: "Scenario", Modul: "Module", Judul: "Title", Jenis: "Type", Prioritas: "Priority",
+  Prasyarat: "Preconditions", Langkah: "Steps", "Hasil yang Diharapkan": "Expected Result",
+  "Hasil Aktual": "Actual Result", Otomasi: "Automated",
+};
+
 export function getTestCases() {
-  return parseCsv(read("1-test-scenario", "test-cases.csv"));
+  return parseCsv(read("1-test-scenario", "test-cases.csv")).map((row) =>
+    Object.fromEntries(Object.entries(row).map(([k, v]) => [CSV_KEYS[k] ?? k, v]))
+  );
 }
 
 export function getBugs() {
   const readme = read("1-test-scenario", "bug-reports", "README.md");
   const files = fs.readdirSync(path.join(ROOT, "1-test-scenario", "bug-reports"));
   const oneLiners = Object.fromEntries(
-    [...readme.matchAll(/\*\*(BUG-\d+) reproduction \(one line\):\*\*\s*(.+)/g)].map((m) => [m[1], m[2]])
+    [...readme.matchAll(/\*\*(BUG-\d+) reproduksi \(satu baris\):\*\*\s*(.+)/g)].map((m) => [m[1], m[2]])
   );
   const bugs = [];
   for (const line of readme.split("\n")) {
@@ -50,7 +59,7 @@ export function getBugs() {
     const file = files.find((f) => f.startsWith(id));
     const body = file
       ? read("1-test-scenario", "bug-reports", file).replace(/^# .*\n+/, "")
-      : `## Reproduction\n\n${oneLiners[id] ?? ""}`;
+      : `## Langkah reproduksi\n\n${oneLiners[id] ?? ""}`;
     bugs.push({ id, title, severity, priority, status, body, file: file ?? null });
   }
   return bugs;

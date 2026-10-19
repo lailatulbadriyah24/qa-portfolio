@@ -2,7 +2,7 @@
 import { useMemo, useState } from "react";
 
 const statusClass = (s) =>
-  s.startsWith("Pass") ? "ok" : s.startsWith("Fail") ? "bad" : "warn";
+  s.startsWith("Lulus") ? "ok" : s.startsWith("Gagal") ? "bad" : "warn";
 
 export default function TestCases({ rows }) {
   const [q, setQ] = useState("");

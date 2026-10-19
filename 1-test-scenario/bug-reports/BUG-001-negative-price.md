@@ -1,15 +1,15 @@
-# BUG-001 - Booking accepts negative `totalprice`
+# BUG-001 - Booking menerima `totalprice` negatif
 
 | | |
 |---|---|
-| **Severity / Priority** | Major / P1 |
-| **Status** | Open |
-| **Environment** | https://restful-booker.herokuapp.com (public demo) |
-| **Related test case** | TC-CRT-05 |
+| **Severity / Prioritas** | Major / P1 |
+| **Status** | Terbuka |
+| **Lingkungan** | https://restful-booker.herokuapp.com (demo publik) |
+| **Test case terkait** | TC-CRT-05 |
 
-## Steps to reproduce
+## Langkah reproduksi
 
-1. Send:
+1. Kirim:
    ```http
    POST /booking
    Content-Type: application/json
@@ -22,18 +22,18 @@
    }
    ```
 
-## Expected result
+## Hasil yang diharapkan
 
-`400 Bad Request` with a message that `totalprice` must be zero or greater.
+`400 Bad Request` dengan pesan bahwa `totalprice` harus nol atau lebih besar.
 
-## Actual result
+## Hasil aktual
 
-`200 OK`; the booking is stored with `"totalprice": -100`.
+`200 OK`; booking tersimpan dengan `"totalprice": -100`.
 
-## Impact
+## Dampak
 
-Negative amounts corrupt revenue reporting and could be abused to create credits or refunds.
+Nominal negatif merusak laporan pendapatan dan bisa disalahgunakan untuk membuat kredit atau pengembalian dana.
 
-## Suggested fix
+## Saran perbaikan
 
-Validate `totalprice >= 0` on create and update (`POST`, `PUT`, `PATCH`).
+Validasi `totalprice >= 0` saat membuat dan mengubah (`POST`, `PUT`, `PATCH`).

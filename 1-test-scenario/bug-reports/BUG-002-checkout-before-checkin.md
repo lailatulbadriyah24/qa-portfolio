@@ -1,28 +1,28 @@
-# BUG-002 - Booking accepts checkout date earlier than checkin
+# BUG-002 - Booking menerima tanggal checkout lebih awal dari checkin
 
 | | |
 |---|---|
-| **Severity / Priority** | Major / P1 |
-| **Status** | Open |
-| **Environment** | https://restful-booker.herokuapp.com (public demo) |
-| **Related test case** | TC-CRT-06 |
+| **Severity / Prioritas** | Major / P1 |
+| **Status** | Terbuka |
+| **Lingkungan** | https://restful-booker.herokuapp.com (demo publik) |
+| **Test case terkait** | TC-CRT-06 |
 
-## Steps to reproduce
+## Langkah reproduksi
 
-1. Send `POST /booking` with `"bookingdates": { "checkin": "2026-11-10", "checkout": "2026-11-01" }` and otherwise valid data.
+1. Kirim `POST /booking` dengan `"bookingdates": { "checkin": "2026-11-10", "checkout": "2026-11-01" }` dan data lain yang valid.
 
-## Expected result
+## Hasil yang diharapkan
 
-`400 Bad Request`: checkout must be after checkin.
+`400 Bad Request`: checkout harus setelah checkin.
 
-## Actual result
+## Hasil aktual
 
-`200 OK`; the booking is stored with checkout nine days before checkin.
+`200 OK`; booking tersimpan dengan checkout sembilan hari sebelum checkin.
 
-## Impact
+## Dampak
 
-Invalid stays break availability calculation and pricing by number of nights.
+Masa menginap yang tidak valid merusak perhitungan ketersediaan kamar dan harga berdasarkan jumlah malam.
 
-## Suggested fix
+## Saran perbaikan
 
-Validate `checkout > checkin` on create and update.
+Validasi `checkout > checkin` saat membuat dan mengubah.

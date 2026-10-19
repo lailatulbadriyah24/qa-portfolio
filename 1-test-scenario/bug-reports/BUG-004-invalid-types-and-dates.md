@@ -1,37 +1,37 @@
-# BUG-004 - Non-numeric price and malformed dates are silently corrupted
+# BUG-004 - Harga bukan angka dan format tanggal salah diam-diam rusak
 
 | | |
 |---|---|
-| **Severity / Priority** | Major / P1 |
-| **Status** | Open |
-| **Environment** | https://restful-booker.herokuapp.com (public demo) |
-| **Related test cases** | TC-CRT-08, TC-CRT-09 |
+| **Severity / Prioritas** | Major / P1 |
+| **Status** | Terbuka |
+| **Lingkungan** | https://restful-booker.herokuapp.com (demo publik) |
+| **Test case terkait** | TC-CRT-08, TC-CRT-09 |
 
-## Steps to reproduce
+## Langkah reproduksi
 
-**Case A - wrong type**
-1. `POST /booking` with `"totalprice": "abc"` and otherwise valid data.
+**Kasus A - tipe data salah**
+1. `POST /booking` dengan `"totalprice": "abc"` dan data lain yang valid.
 
-**Case B - malformed date**
-1. `POST /booking` with `"checkin": "not-a-date"` and otherwise valid data.
+**Kasus B - format tanggal salah**
+1. `POST /booking` dengan `"checkin": "not-a-date"` dan data lain yang valid.
 
-## Expected result
+## Hasil yang diharapkan
 
-`400 Bad Request` describing the invalid field.
+`400 Bad Request` yang menjelaskan field yang tidak valid.
 
-## Actual result
+## Hasil aktual
 
-Both return `200 OK` and the data is silently corrupted:
+Keduanya mengembalikan `200 OK` dan datanya rusak tanpa pemberitahuan:
 
-| Input | Stored value |
+| Input | Nilai yang tersimpan |
 |---|---|
 | `"totalprice": "abc"` | `"totalprice": null` |
 | `"checkin": "not-a-date"` | `"checkin": "0NaN-aN-aN"` |
 
-## Impact
+## Dampak
 
-Silent data corruption: the caller believes the booking was saved correctly. Downstream reports and date logic receive `null` or an unparseable date.
+Data rusak secara diam-diam: pemanggil mengira booking sudah tersimpan dengan benar. Laporan dan logika tanggal di hilir menerima `null` atau tanggal yang tidak bisa dibaca.
 
-## Suggested fix
+## Saran perbaikan
 
-Validate types and ISO-8601 date format (`YYYY-MM-DD`) before persisting, and return a field-level error message.
+Validasi tipe data dan format tanggal ISO-8601 (`YYYY-MM-DD`) sebelum menyimpan, lalu kembalikan pesan error per field.

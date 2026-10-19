@@ -1023,275 +1023,297 @@
       "name": "7. Known defects (expected to fail)",
       "item": [
         {
-          "name": "BUG-001 Negative totalprice is accepted",
-          "event": [
+          "name": "7.1 Auth",
+          "item": [
             {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test('[BUG-001] Invalid input should be rejected with 4xx (currently accepted)', () => pm.expect(pm.response.code).to.be.within(400, 499));"
-                ]
-              }
-            }
-          ],
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/booking",
-              "host": [
-                "{{baseUrl}}"
+              "name": "TC-AUTH-02 | BUG-006 Failed login should not return 200",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('[BUG-006] Failed login should return 401 (currently 200)', () => pm.expect(pm.response.code).to.eql(401));"
+                    ]
+                  }
+                }
               ],
-              "path": [
-                "booking"
-              ]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"firstname\": \"Defect\",\n  \"lastname\": \"Probe\",\n  \"totalprice\": -100,\n  \"depositpaid\": true,\n  \"bookingdates\": {\n    \"checkin\": \"2026-11-01\",\n    \"checkout\": \"2026-11-02\"\n  }\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/auth",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "auth"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"wrong\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
                 }
               }
             }
-          }
+          ]
         },
         {
-          "name": "BUG-002 checkout earlier than checkin is accepted",
-          "event": [
+          "name": "7.2 Booking - Create",
+          "item": [
             {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test('[BUG-002] Invalid input should be rejected with 4xx (currently accepted)', () => pm.expect(pm.response.code).to.be.within(400, 499));"
-                ]
-              }
-            }
-          ],
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/booking",
-              "host": [
-                "{{baseUrl}}"
+              "name": "TC-CRT-05 | BUG-001 Negative totalprice is accepted",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('[BUG-001] Invalid input should be rejected with 4xx (currently accepted)', () => pm.expect(pm.response.code).to.be.within(400, 499));"
+                    ]
+                  }
+                }
               ],
-              "path": [
-                "booking"
-              ]
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/booking",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "booking"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"firstname\": \"Defect\",\n  \"lastname\": \"Probe\",\n  \"totalprice\": -100,\n  \"depositpaid\": true,\n  \"bookingdates\": {\n    \"checkin\": \"2026-11-01\",\n    \"checkout\": \"2026-11-02\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
             },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"firstname\": \"Defect\",\n  \"lastname\": \"Probe\",\n  \"totalprice\": 10,\n  \"depositpaid\": true,\n  \"bookingdates\": {\n    \"checkin\": \"2026-11-10\",\n    \"checkout\": \"2026-11-01\"\n  }\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
+            {
+              "name": "TC-CRT-06 | BUG-002 checkout earlier than checkin is accepted",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('[BUG-002] Invalid input should be rejected with 4xx (currently accepted)', () => pm.expect(pm.response.code).to.be.within(400, 499));"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/booking",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "booking"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"firstname\": \"Defect\",\n  \"lastname\": \"Probe\",\n  \"totalprice\": 10,\n  \"depositpaid\": true,\n  \"bookingdates\": {\n    \"checkin\": \"2026-11-10\",\n    \"checkout\": \"2026-11-01\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "name": "TC-CRT-07 | BUG-003 Empty firstname is accepted",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('[BUG-003] Invalid input should be rejected with 4xx (currently accepted)', () => pm.expect(pm.response.code).to.be.within(400, 499));"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/booking",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "booking"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"firstname\": \"\",\n  \"lastname\": \"Probe\",\n  \"totalprice\": 10,\n  \"depositpaid\": true,\n  \"bookingdates\": {\n    \"checkin\": \"2026-11-01\",\n    \"checkout\": \"2026-11-02\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "name": "TC-CRT-08 | BUG-004 Non-numeric totalprice is accepted and stored as null",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('[BUG-004] Invalid input should be rejected with 4xx (currently accepted)', () => pm.expect(pm.response.code).to.be.within(400, 499));"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/booking",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "booking"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"firstname\": \"Defect\",\n  \"lastname\": \"Probe\",\n  \"totalprice\": \"abc\",\n  \"depositpaid\": true,\n  \"bookingdates\": {\n    \"checkin\": \"2026-11-01\",\n    \"checkout\": \"2026-11-02\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "name": "TC-CRT-09 | BUG-004b Invalid date string is accepted and stored as \"0NaN-aN-aN\"",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('[BUG-004] Invalid input should be rejected with 4xx (currently accepted)', () => pm.expect(pm.response.code).to.be.within(400, 499));"
+                    ]
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/booking",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "booking"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"firstname\": \"Defect\",\n  \"lastname\": \"Probe\",\n  \"totalprice\": 10,\n  \"depositpaid\": true,\n  \"bookingdates\": {\n    \"checkin\": \"not-a-date\",\n    \"checkout\": \"2026-11-02\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
                 }
               }
             }
-          }
-        },
-        {
-          "name": "BUG-003 Empty firstname is accepted",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test('[BUG-003] Invalid input should be rejected with 4xx (currently accepted)', () => pm.expect(pm.response.code).to.be.within(400, 499));"
-                ]
-              }
-            }
-          ],
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/booking",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "booking"
-              ]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"firstname\": \"\",\n  \"lastname\": \"Probe\",\n  \"totalprice\": 10,\n  \"depositpaid\": true,\n  \"bookingdates\": {\n    \"checkin\": \"2026-11-01\",\n    \"checkout\": \"2026-11-02\"\n  }\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          }
-        },
-        {
-          "name": "BUG-004 Non-numeric totalprice is accepted and stored as null",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test('[BUG-004] Invalid input should be rejected with 4xx (currently accepted)', () => pm.expect(pm.response.code).to.be.within(400, 499));"
-                ]
-              }
-            }
-          ],
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/booking",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "booking"
-              ]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"firstname\": \"Defect\",\n  \"lastname\": \"Probe\",\n  \"totalprice\": \"abc\",\n  \"depositpaid\": true,\n  \"bookingdates\": {\n    \"checkin\": \"2026-11-01\",\n    \"checkout\": \"2026-11-02\"\n  }\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          }
-        },
-        {
-          "name": "BUG-004b Invalid date string is accepted and stored as \"0NaN-aN-aN\"",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test('[BUG-004] Invalid input should be rejected with 4xx (currently accepted)', () => pm.expect(pm.response.code).to.be.within(400, 499));"
-                ]
-              }
-            }
-          ],
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/booking",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "booking"
-              ]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"firstname\": \"Defect\",\n  \"lastname\": \"Probe\",\n  \"totalprice\": 10,\n  \"depositpaid\": true,\n  \"bookingdates\": {\n    \"checkin\": \"not-a-date\",\n    \"checkout\": \"2026-11-02\"\n  }\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          }
-        },
-        {
-          "name": "BUG-006 Failed login should not return 200",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test('[BUG-006] Failed login should return 401 (currently 200)', () => pm.expect(pm.response.code).to.eql(401));"
-                ]
-              }
-            }
-          ],
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/auth",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "auth"
-              ]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"wrong\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
-          }
+          ]
         }
       ]
     }
   ],
   "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://restful-booker.herokuapp.com"
+    },
+    {
+      "key": "username",
+      "value": "admin"
+    },
+    {
+      "key": "password",
+      "value": "password123"
+    },
     {
       "key": "token",
       "value": ""
@@ -1299,6 +1321,40 @@
     {
       "key": "bookingId",
       "value": ""
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Lets any single request be sent on its own: fetch a token / create a booking only when they are missing.",
+          "// A full ordered run is unaffected, because AUTH-01 and CRT-01 set these before they are needed.",
+          "const base = pm.variables.replaceIn(\"{{baseUrl}}\");",
+          "const req = JSON.stringify(pm.request.toJSON());",
+          "",
+          "if (req.includes(\"{{token}}\") && !pm.collectionVariables.get(\"token\")) {",
+          "  pm.sendRequest({",
+          "    url: base + \"/auth\", method: \"POST\",",
+          "    header: { \"Content-Type\": \"application/json\" },",
+          "    body: { mode: \"raw\", raw: JSON.stringify({ username: pm.variables.get(\"username\"), password: pm.variables.get(\"password\") }) }",
+          "  }, (err, res) => {",
+          "    if (!err && res.code === 200 && res.json().token) pm.collectionVariables.set(\"token\", res.json().token);",
+          "  });",
+          "}",
+          "",
+          "if (req.includes(\"{{bookingId}}\") && !pm.collectionVariables.get(\"bookingId\")) {",
+          "  pm.sendRequest({",
+          "    url: base + \"/booking\", method: \"POST\",",
+          "    header: { \"Content-Type\": \"application/json\", \"Accept\": \"application/json\" },",
+          "    body: { mode: \"raw\", raw: JSON.stringify({ firstname: \"Laila\", lastname: \"Tester\", totalprice: 150, depositpaid: true, bookingdates: { checkin: \"2026-11-01\", checkout: \"2026-11-05\" }, additionalneeds: \"Breakfast\" }) }",
+          "  }, (err, res) => {",
+          "    if (!err && res.code === 200) pm.collectionVariables.set(\"bookingId\", res.json().bookingid);",
+          "  });",
+          "}"
+        ]
+      }
     }
   ]
 }

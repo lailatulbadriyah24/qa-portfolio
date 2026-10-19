@@ -1,33 +1,33 @@
-# Bug Reports
+# Laporan Bug
 
-Defects found while testing Restful-Booker. Each was reproduced against the live API; the Postman folder **7. Known defects** contains an automated check for BUG-001 to BUG-004 and BUG-006.
+Defect yang ditemukan saat menguji Restful-Booker. Semuanya direproduksi pada API yang sungguhan; folder Postman **7. Known defects** berisi pengecekan otomatis untuk BUG-001 sampai BUG-004 dan BUG-006.
 
-| ID | Title | Severity | Priority | Status |
+| ID | Judul | Severity | Prioritas | Status |
 |---|---|---|---|---|
-| [BUG-001](BUG-001-negative-price.md) | Booking accepts negative `totalprice` | Major | P1 | Open |
-| [BUG-002](BUG-002-checkout-before-checkin.md) | Booking accepts checkout date earlier than checkin | Major | P1 | Open |
-| BUG-003 | Booking accepts an empty `firstname` | Minor | P2 | Open |
-| [BUG-004](BUG-004-invalid-types-and-dates.md) | Non-numeric price and malformed dates are silently corrupted (`null`, `0NaN-aN-aN`) | Major | P1 | Open |
-| [BUG-005](BUG-005-missing-fields-500.md) | Missing required fields cause `500 Internal Server Error` instead of `400` | Major | P1 | Open |
-| [BUG-006](BUG-006-failed-login-200.md) | Failed login returns `200 OK` instead of `401` | Minor | P2 | Open |
-| BUG-007 | Inconsistent delete status codes: success returns `201`, repeat delete returns `405` (expected `204`/`200` and `404`) | Minor | P3 | Open |
+| [BUG-001](BUG-001-negative-price.md) | Booking menerima `totalprice` negatif | Major | P1 | Terbuka |
+| [BUG-002](BUG-002-checkout-before-checkin.md) | Booking menerima tanggal checkout lebih awal dari checkin | Major | P1 | Terbuka |
+| BUG-003 | Booking menerima `firstname` kosong | Minor | P2 | Terbuka |
+| [BUG-004](BUG-004-invalid-types-and-dates.md) | Harga bukan angka dan format tanggal salah diam-diam rusak (`null`, `0NaN-aN-aN`) | Major | P1 | Terbuka |
+| [BUG-005](BUG-005-missing-fields-500.md) | Field wajib yang hilang menyebabkan `500 Internal Server Error`, bukan `400` | Major | P1 | Terbuka |
+| [BUG-006](BUG-006-failed-login-200.md) | Login gagal mengembalikan `200 OK`, bukan `401` | Minor | P2 | Terbuka |
+| BUG-007 | Status code hapus tidak konsisten: berhasil mengembalikan `201`, hapus ulang mengembalikan `405` (seharusnya `204`/`200` dan `404`) | Minor | P3 | Terbuka |
 
-**BUG-003 reproduction (one line):** `POST /booking` with `"firstname": ""` -> `200 OK`, booking stored with an empty name.
+**BUG-003 reproduksi (satu baris):** `POST /booking` dengan `"firstname": ""` -> `200 OK`, booking tersimpan dengan nama kosong.
 
-**BUG-007 reproduction (one line):** `DELETE /booking/{id}` with a valid token -> `201 Created`; the same request again -> `405 Method Not Allowed`.
+**BUG-007 reproduksi (satu baris):** `DELETE /booking/{id}` dengan token valid -> `201 Created`; permintaan yang sama diulang -> `405 Method Not Allowed`.
 
-## Report template
+## Template laporan
 
 ```
 ID:
-Title:
-Environment:
-Severity / Priority:
-Preconditions:
-Steps to reproduce:
-Expected result:
-Actual result:
-Evidence (request / response):
-Impact:
-Suggested fix:
+Judul:
+Lingkungan:
+Severity / Prioritas:
+Prasyarat:
+Langkah reproduksi:
+Hasil yang diharapkan:
+Hasil aktual:
+Bukti (request / response):
+Dampak:
+Saran perbaikan:
 ```

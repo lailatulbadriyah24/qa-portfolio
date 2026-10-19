@@ -1,106 +1,106 @@
-# Performance Test Report - Restful-Booker API
+# Laporan Pengujian Performa - Restful-Booker API
 
 | | |
 |---|---|
-| **Date** | 2026-10-16 |
-| **Target** | https://restful-booker.herokuapp.com (public demo, free tier) |
-| **Tool** | k6 v2.3.0, run from a single laptop over the public internet |
-| **Max load** | 10 virtual users (deliberately low: shared public server) |
+| **Tanggal** | 2026-10-16 |
+| **Target** | https://restful-booker.herokuapp.com (demo publik, tier gratis) |
+| **Alat** | k6 v2.3.0, dijalankan dari satu laptop lewat internet publik |
+| **Beban maksimum** | 10 virtual user (sengaja rendah: server publik yang dipakai bersama) |
 
-> Results include network latency from the test machine (about 230-250 ms minimum round trip), so absolute numbers describe "as seen by a remote client", not server processing time.
+> Hasil sudah termasuk latensi jaringan dari mesin penguji (waktu bolak-balik minimum sekitar 230-250 ms), sehingga angka absolutnya menggambarkan "yang terlihat oleh client dari jauh", bukan waktu proses di server.
 
-## 1. Objectives
+## 1. Tujuan
 
-1. Confirm the main booking flow works under concurrent use (functional correctness under load).
-2. Check that latency and error rate stay within defined thresholds at expected load (10 VUs).
-3. Observe how the API behaves under more aggressive traffic.
+1. Memastikan alur booking utama berjalan saat dipakai bersamaan (kebenaran fungsional di bawah beban).
+2. Memeriksa bahwa latensi dan tingkat error tetap dalam threshold pada beban yang diharapkan (10 VU).
+3. Mengamati perilaku API di bawah trafik yang lebih agresif.
 
-## 2. Scenarios
+## 2. Skenario
 
-All scenarios exercise the same flow: list bookings -> create -> get -> (patch) -> delete (cleanup).
+Semua skenario menjalankan alur yang sama: daftar booking -> buat -> ambil -> (patch) -> hapus (pembersihan).
 
-| Test | Profile | Think time |
+| Tes | Profil | Think time |
 |---|---|---|
-| Smoke | 1 VU, 5 iterations | 1 s |
-| Load | 0 -> 10 VUs in 30 s, hold 2 min, ramp down 30 s | 1-3 s |
-| Stress | 2 -> 5 -> 8 -> 10 VUs, hold 1 min at 10, ramp down (total 3 min) | 0.5 s |
+| Smoke | 1 VU, 5 iterasi | 1 d |
+| Load | 0 -> 10 VU dalam 30 d, tahan 2 menit, turun 30 d | 1-3 d |
+| Stress | 2 -> 5 -> 8 -> 10 VU, tahan 1 menit di 10, lalu turun (total 3 menit) | 0,5 d |
 
-## 3. Thresholds
+## 3. Threshold
 
-| Test | Threshold |
+| Tes | Threshold |
 |---|---|
 | Smoke | `http_req_failed < 1%`, `checks > 99%`, `p95 < 2000 ms` |
-| Load | `http_req_failed < 1%`, `checks > 99%`, `p95 < 1500 ms`, `p99 < 3000 ms`, `GET /booking/{id}` p95 < 1000 ms, `POST /booking` p95 < 1500 ms |
+| Load | `http_req_failed < 1%`, `checks > 99%`, `p95 < 1500 ms`, `p99 < 3000 ms`, p95 `GET /booking/{id}` < 1000 ms, p95 `POST /booking` < 1500 ms |
 | Stress | `http_req_failed < 5%`, `p95 < 3000 ms` |
 
-## 4. Results
+## 4. Hasil
 
 ### Smoke (1 VU)
 
-| Metric | Result |
+| Metrik | Hasil |
 |---|---|
-| Checks passed | 42 / 42 (100%) |
-| Requests | 26, 0 failed |
-| p95 latency | 258 ms |
-| Verdict | **Pass** |
+| Check yang lulus | 42 / 42 (100%) |
+| Request | 26, 0 gagal |
+| Latensi p95 | 258 ms |
+| Kesimpulan | **Lulus** |
 
-### Load (10 VUs, 3 min)
+### Load (10 VU, 3 menit)
 
-| Metric | Result | Threshold | Verdict |
+| Metrik | Hasil | Threshold | Kesimpulan |
 |---|---|---|---|
-| Requests | 1,301 (7.0 req/s), 260 iterations | - | - |
-| Checks passed | 2,082 / 2,082 (100%) | > 99% | Pass |
-| `http_req_failed` | 0.00% | < 1% | Pass |
-| Latency avg / median | 382 ms / 256 ms | - | - |
-| Latency p90 / p95 | 793 ms / 952 ms | p95 < 1500 ms | Pass |
-| Latency max | 1.91 s | p99 < 3000 ms | Pass |
-| `GET /booking/{id}` p95 | 347 ms | < 1000 ms | Pass |
-| `POST /booking` p95 | 343 ms | < 1500 ms | Pass |
+| Request | 1.301 (7,0 req/d), 260 iterasi | - | - |
+| Check yang lulus | 2.082 / 2.082 (100%) | > 99% | Lulus |
+| `http_req_failed` | 0,00% | < 1% | Lulus |
+| Latensi rata-rata / median | 382 ms / 256 ms | - | - |
+| Latensi p90 / p95 | 793 ms / 952 ms | p95 < 1500 ms | Lulus |
+| Latensi maksimum | 1,91 d | p99 < 3000 ms | Lulus |
+| p95 `GET /booking/{id}` | 347 ms | < 1000 ms | Lulus |
+| p95 `POST /booking` | 343 ms | < 1500 ms | Lulus |
 
-**Verdict: Pass.** The API handles 10 concurrent users with no errors.
+**Kesimpulan: Lulus.** API sanggup melayani 10 pengguna bersamaan tanpa error.
 
-### Stress (up to 10 VUs, shorter think time, 3 min) - run twice
+### Stress (sampai 10 VU, think time lebih pendek, 3 menit) - dijalankan dua kali
 
-The stress test was run twice under identical settings. The two runs disagreed.
+Tes stress dijalankan dua kali dengan pengaturan yang sama. Hasil kedua run berbeda.
 
-| Metric | Run 1 (10:18) | Run 2 (10:26) | Threshold |
+| Metrik | Run 1 (10:18) | Run 2 (10:26) | Threshold |
 |---|---|---|---|
-| Requests / iterations | 1,773 / 443 | 2,061 / 515 | - |
-| Checks passed | 2,995 / 3,103 (96.5%) | 100% | - |
-| `http_req_failed` | **6.09%** (108 requests) | 0.00% | < 5% |
-| Latency avg / median | 423 ms / 263 ms | 349 ms / 262 ms | - |
-| Latency p90 / p95 | 761 ms / 1.05 s | 568 ms / 665 ms | p95 < 3000 ms |
-| Latency max | **6.36 s** | 1.18 s | - |
-| Verdict | **Fail** (error rate) | Pass | |
+| Request / iterasi | 1.773 / 443 | 2.061 / 515 | - |
+| Check yang lulus | 2.995 / 3.103 (96,5%) | 100% | - |
+| `http_req_failed` | **6,09%** (108 request) | 0,00% | < 5% |
+| Latensi rata-rata / median | 423 ms / 263 ms | 349 ms / 262 ms | - |
+| Latensi p90 / p95 | 761 ms / 1,05 d | 568 ms / 665 ms | p95 < 3000 ms |
+| Latensi maksimum | **6,36 d** | 1,18 d | - |
+| Kesimpulan | **Gagal** (tingkat error) | Lulus | |
 
-In run 1 every failure was a failed `DELETE /booking/{id}` check (108 of 443 deletes). Other endpoints had no failures. Run 2 had none.
+Pada run 1, semua kegagalan berasal dari check `DELETE /booking/{id}` yang gagal (108 dari 443 penghapusan). Endpoint lain tidak ada yang gagal. Run 2 tidak mengalami kegagalan sama sekali.
 
-**Overall verdict: inconclusive.** The error rate threshold was breached once in two runs, and the cause was not captured.
+**Kesimpulan keseluruhan: belum bisa disimpulkan.** Threshold tingkat error terlampaui satu kali dari dua run, dan penyebabnya tidak sempat terekam.
 
-## 5. Analysis
+## 5. Analisis
 
-1. **Normal load is healthy.** With realistic think time the API shows zero errors and a median of 256 ms, which is essentially network round-trip time. The p95 (952 ms) is about four times the median, meaning a small share of requests is noticeably slower. The occasional slow request is typical of a free-tier host.
-2. **Stress behaviour is not stable.** Run 1 had a 6.1% error rate and a 6.4 s maximum latency; run 2, with the same script and load, had 0% errors and a 1.2 s maximum. Because only one of two runs failed, the failure is intermittent, not a hard capacity limit at 10 VUs.
-3. **The failures in run 1 were all on `DELETE`.** 108 of 443 deletes (about 24%) failed their check while login, list, create and get stayed at 100%. A separate sequential check (create then delete immediately, single user, 25 times) returned `201` every time, so a single user does not trigger it.
-4. **The failing status code was not captured in run 1.** The `check` only records pass or fail, so I cannot say whether the failures were `4xx`, `5xx` or timeouts. I added status-code logging to `DELETE` afterwards (`lib/api.js`), but run 2 had no failures, so it produced no evidence.
-5. **Likely contributors (hypotheses, not confirmed):** other users sharing the free-tier demo server during run 1, or occasional server stalls. The 6.4 s maximum latency in run 1 fits a stall better than a steady capacity limit.
+1. **Beban normal sehat.** Dengan think time yang realistis, API tidak menghasilkan error dan median-nya 256 ms, yang pada dasarnya hanyalah waktu bolak-balik jaringan. p95 (952 ms) sekitar empat kali median, artinya sebagian kecil request terasa jauh lebih lambat. Request yang sesekali lambat itu wajar untuk host tier gratis.
+2. **Perilaku saat stress tidak stabil.** Run 1 memiliki tingkat error 6,1% dan latensi maksimum 6,4 d; run 2, dengan skrip dan beban yang sama, tidak ada error dan latensi maksimumnya 1,2 d. Karena hanya satu dari dua run yang gagal, kegagalannya bersifat sesekali, bukan batas kapasitas yang pasti pada 10 VU.
+3. **Kegagalan di run 1 seluruhnya ada di `DELETE`.** 108 dari 443 penghapusan (sekitar 24%) gagal pada check-nya, sementara login, daftar, buat, dan ambil tetap 100%. Pengecekan terpisah secara berurutan (buat lalu langsung hapus, satu pengguna, 25 kali) mengembalikan `201` setiap kali, jadi satu pengguna saja tidak memicunya.
+4. **Status code yang gagal tidak terekam di run 1.** `check` hanya mencatat lulus atau gagal, sehingga saya tidak bisa memastikan apakah kegagalannya `4xx`, `5xx`, atau timeout. Setelahnya saya menambahkan pencatatan status code pada `DELETE` (`lib/api.js`), tetapi run 2 tidak mengalami kegagalan, jadi belum menghasilkan bukti.
+5. **Dugaan penyebab (hipotesis, belum terbukti):** pengguna lain yang memakai server demo tier gratis pada saat run 1, atau server sesekali tersendat. Latensi maksimum 6,4 d di run 1 lebih cocok dengan server tersendat daripada batas kapasitas yang stabil.
 
-## 6. Recommendations
+## 6. Rekomendasi
 
-| # | Recommendation | Why |
+| # | Rekomendasi | Alasan |
 |---|---|---|
-| 1 | Repeat the stress test at least 3 more times (different times of day) and compare error rate and max latency | Two runs disagree; a trend needs more data |
-| 2 | Keep the new status-code logging on `DELETE` so any future failure is diagnosable | Root cause is still unknown |
-| 3 | Treat 10 VUs as supported for load (passes cleanly), and do not claim stress stability yet | Load test passed; stress is inconclusive |
-| 4 | If the failures recur on a controlled environment, investigate `DELETE` under concurrent writes (locking, data store consistency) | All run-1 errors were on this endpoint |
+| 1 | Ulangi tes stress minimal 3 kali lagi (pada jam yang berbeda) dan bandingkan tingkat error serta latensi maksimum | Dua run saling bertentangan; tren butuh data lebih banyak |
+| 2 | Pertahankan pencatatan status code yang baru pada `DELETE` agar kegagalan berikutnya bisa didiagnosis | Akar masalahnya masih belum diketahui |
+| 3 | Anggap 10 VU didukung untuk load (lulus dengan bersih), dan jangan klaim stabilitas stress dulu | Tes load lulus; stress belum bisa disimpulkan |
+| 4 | Jika kegagalan terulang di lingkungan yang terkendali, selidiki `DELETE` saat ada penulisan bersamaan (locking, konsistensi penyimpanan data) | Semua error run 1 ada di endpoint ini |
 
-## 7. Limitations
+## 7. Keterbatasan
 
-- Tests ran from one machine over the internet; client-side network variance is included in the numbers.
-- The target is a shared public demo, so other users' traffic may affect results. The smoke and load tests were run once, the stress test twice (with different outcomes). To claim a trend, repeat at least three times and compare.
-- Load is capped at 10 VUs on purpose, so this report cannot say where the real capacity limit is.
-- A first attempt at these runs was discarded because two runs overlapped by mistake and distorted the load; the numbers above come from a clean re-run.
+- Tes dijalankan dari satu mesin lewat internet; variasi jaringan di sisi client ikut masuk ke angka-angka.
+- Targetnya demo publik yang dipakai bersama, jadi trafik pengguna lain bisa memengaruhi hasil. Tes smoke dan load dijalankan sekali, tes stress dua kali (dengan hasil berbeda). Untuk menyimpulkan tren, ulangi minimal tiga kali lalu bandingkan.
+- Beban sengaja dibatasi 10 VU, jadi laporan ini tidak bisa menyebutkan di mana batas kapasitas sebenarnya.
+- Percobaan pertama dibuang karena dua run tidak sengaja berjalan tumpang tindih dan mengacaukan bebannya; angka di atas berasal dari run ulang yang bersih.
 
-## 8. Raw data
+## 8. Data mentah
 
-JSON summaries are in `results/`: `smoke-summary.json`, `load-summary.json`, `stress-run1-summary.json` (6.09% errors) and `stress-summary.json` (run 2, 0% errors).
+Ringkasan JSON ada di `results/`: `smoke-summary.json`, `load-summary.json`, `stress-run1-summary.json` (error 6,09%) dan `stress-summary.json` (run 2, error 0%).

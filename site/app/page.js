@@ -159,7 +159,7 @@ export default function Home() {
             dan nama kosong tetap diterima, dan field wajib yang hilang malah menghasilkan error{" "}
             <code>500</code>. Sisi baiknya, semua <code>PUT</code>, <code>PATCH</code>, dan{" "}
             <code>DELETE</code> tanpa token ditolak dengan <code>403</code>. Klik satu bug untuk
-            melihat langkah reproduksinya (laporannya berbahasa Inggris).
+            melihat langkah reproduksinya.
           </p>
           <Bugs bugs={bugs} />
 
@@ -221,8 +221,7 @@ export default function Home() {
             Saya menjalankan skrip k6 ber-threshold ke API sungguhan dari satu laptop, jadi angkanya
             sudah termasuk latensi jaringan sekitar 230 sampai 250 ms. Smoke dan load lulus, sedangkan
             stress belum bisa disimpulkan (alasannya di bawah grafik).{" "}
-            <a href={`${REPO_URL}/blob/main/3-k6-performance/REPORT.md`}>Baca laporan lengkap</a>{" "}
-            <span className="muted">(bahasa Inggris)</span>.
+            <a href={`${REPO_URL}/blob/main/3-k6-performance/REPORT.md`}>Baca laporan lengkap</a>.
           </p>
           <Perf runs={perf} />
         </section>

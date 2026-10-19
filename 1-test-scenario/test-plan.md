@@ -1,74 +1,74 @@
-# Test Plan - Restful-Booker API
+# Rencana Pengujian - Restful-Booker API
 
 | | |
 |---|---|
-| **Project** | Restful-Booker (public hotel-booking demo API) |
+| **Proyek** | Restful-Booker (API demo pemesanan hotel yang terbuka untuk umum) |
 | **Base URL** | https://restful-booker.herokuapp.com |
-| **Author** | Laila |
-| **Version** | 1.0 |
+| **Penyusun** | Lailatul Badriyah |
+| **Versi** | 1.0 |
 
-## 1. Objective
+## 1. Tujuan
 
-Verify that the booking API correctly authenticates users, performs CRUD on bookings, rejects invalid input, protects write operations, and stays responsive under light load.
+Memastikan API booking mengautentikasi pengguna dengan benar, menjalankan operasi CRUD pada booking, menolak input yang tidak valid, melindungi operasi tulis, dan tetap responsif di bawah beban ringan.
 
-## 2. Scope
+## 2. Ruang lingkup
 
-**In scope**
+**Termasuk**
 
-| Area | Endpoints |
+| Area | Endpoint |
 |---|---|
 | Health | `GET /ping` |
-| Authentication | `POST /auth` |
-| Booking CRUD | `POST /booking`, `GET /booking`, `GET /booking/{id}`, `PUT /booking/{id}`, `PATCH /booking/{id}`, `DELETE /booking/{id}` |
-| Non-functional | Response time, light load / stress behaviour (see `3-k6-performance`) |
+| Autentikasi | `POST /auth` |
+| CRUD booking | `POST /booking`, `GET /booking`, `GET /booking/{id}`, `PUT /booking/{id}`, `PATCH /booking/{id}`, `DELETE /booking/{id}` |
+| Non-fungsional | Waktu respons, perilaku di bawah beban ringan / stress (lihat `3-k6-performance`) |
 
-**Out of scope**: UI, security penetration testing, the underlying infrastructure, and large-scale load (the server is a shared public service).
+**Tidak termasuk**: UI, penetration testing keamanan, infrastruktur di baliknya, dan beban skala besar (server ini layanan publik yang dipakai bersama).
 
-## 3. Test approach
+## 3. Pendekatan pengujian
 
-| Level | Technique | Tooling |
+| Tingkat | Teknik | Alat |
 |---|---|---|
-| Functional API | Equivalence partitioning, boundary value analysis, state-based flow (create -> read -> update -> delete), negative testing | Postman + Newman |
-| Data-driven | Same request over several data rows | Postman collection runner + CSV |
-| Performance | Smoke, load, stress with thresholds | k6 |
-| Exploratory | Input validation, error handling, headers | Manual (Postman / curl) |
+| API fungsional | Equivalence partitioning, boundary value analysis, alur berbasis state (create -> read -> update -> delete), negative testing | Postman + Newman |
+| Data-driven | Request yang sama dijalankan pada beberapa baris data | Collection runner Postman + CSV |
+| Performa | Smoke, load, stress dengan threshold | k6 |
+| Eksploratori | Validasi input, penanganan error, header | Manual (Postman / curl) |
 
-Test cases are designed from the scenarios in `test-scenarios.md` and listed in `test-cases.csv`. Each automated case carries the same ID in the Postman collection (for example `TC-CRT-01`).
+Test case dirancang dari skenario di `test-scenarios.md` dan dicatat di `test-cases.csv`. Setiap test case otomatis memakai ID yang sama di collection Postman (misalnya `TC-CRT-01`).
 
-## 4. Test environment
+## 4. Lingkungan pengujian
 
-- Public demo server (shared; data is reset periodically by the maintainers).
-- Credentials: public demo account documented by the API (`admin` / `password123`).
-- Tools: Postman, Newman 6, k6, Node.js 18+, GitHub Actions.
+- Server demo publik (dipakai bersama; datanya direset berkala oleh pengelolanya).
+- Kredensial: akun demo publik yang didokumentasikan API (`admin` / `password123`).
+- Alat: Postman, Newman 6, k6, Node.js 18+, GitHub Actions.
 
-## 5. Entry / exit criteria
+## 5. Kriteria masuk / keluar
 
-**Entry**: API reachable (`GET /ping` returns 201); test data and credentials available.
+**Masuk**: API dapat dijangkau (`GET /ping` mengembalikan 201); data uji dan kredensial tersedia.
 
-**Exit**
-- 100% of Priority 1 test cases executed.
-- All stable regression cases pass.
-- Every failed case is logged as a bug with severity and evidence.
-- Performance thresholds defined in `3-k6-performance/REPORT.md` are met or deviations are explained.
+**Keluar**
+- 100% test case Prioritas 1 sudah dieksekusi.
+- Semua test case regression yang stabil lulus.
+- Setiap test case yang gagal dicatat sebagai bug lengkap dengan severity dan bukti.
+- Threshold performa yang ditetapkan di `3-k6-performance/REPORT.md` terpenuhi, atau penyimpangannya dijelaskan.
 
-## 6. Risks and mitigations
+## 6. Risiko dan mitigasi
 
-| Risk | Impact | Mitigation |
+| Risiko | Dampak | Mitigasi |
 |---|---|---|
-| Shared public server, data may be reset or changed by others | Flaky tests | Each run creates and cleans up its own booking; no hard-coded ids |
-| Server is a free tier and may be slow after idling | Timing assertions fail | Generous response-time threshold (2 s); warm-up request first |
-| Load tests could disturb other users | Ethical / availability | Capped at 10 virtual users, short duration |
-| API has weak validation | Many "expected to fail" checks | Known defects isolated in their own folder so CI stays green |
+| Server publik dipakai bersama, data bisa direset atau diubah orang lain | Test tidak stabil | Setiap run membuat dan membersihkan booking sendiri; tanpa id yang ditulis mati |
+| Server tier gratis dan bisa lambat setelah lama tidak dipakai | Assertion waktu gagal | Threshold waktu respons yang longgar (2 detik); request pemanasan lebih dulu |
+| Load test bisa mengganggu pengguna lain | Etika / ketersediaan | Dibatasi 10 virtual user dengan durasi singkat |
+| Validasi API lemah | Banyak pengecekan "diharapkan gagal" | Defect yang sudah diketahui dipisah di folder sendiri agar CI tetap hijau |
 
-## 7. Deliverables
+## 7. Hasil kerja
 
-Test plan, test scenarios, test cases, Postman collection and environment, Newman HTML report, k6 scripts and report, bug reports.
+Rencana pengujian, skenario pengujian, test case, collection dan environment Postman, laporan HTML Newman, skrip dan laporan k6, serta laporan bug.
 
-## 8. Defect severity guide
+## 8. Panduan severity defect
 
-| Severity | Meaning | Example |
+| Severity | Arti | Contoh |
 |---|---|---|
-| Critical | Data loss, security hole, system down | Unauthenticated delete |
-| Major | Core feature wrong, no workaround | Invalid data stored silently |
-| Minor | Incorrect behaviour with a workaround | Wrong status code |
-| Trivial | Cosmetic / documentation | Typo in message |
+| Critical | Data hilang, celah keamanan, sistem mati | Penghapusan tanpa autentikasi |
+| Major | Fitur inti salah, tanpa solusi sementara | Data tidak valid tersimpan diam-diam |
+| Minor | Perilaku salah tetapi ada solusi sementara | Status code salah |
+| Trivial | Kosmetik / dokumentasi | Salah ketik pada pesan |

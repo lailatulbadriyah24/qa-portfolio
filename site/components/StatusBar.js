@@ -1,9 +1,9 @@
 // One bar showing how the test cases ended up: pass / fail / not conclusive.
 export default function StatusBar({ rows }) {
   const groups = [
-    { key: "pass", label: "Lulus", n: rows.filter((r) => r.Status.startsWith("Pass")).length },
-    { key: "fail", label: "Gagal", n: rows.filter((r) => r.Status.startsWith("Fail")).length },
-    { key: "open", label: "Observasi / belum dijalankan", n: rows.filter((r) => !/^(Pass|Fail)/.test(r.Status)).length },
+    { key: "pass", label: "Lulus", n: rows.filter((r) => r.Status.startsWith("Lulus")).length },
+    { key: "fail", label: "Gagal", n: rows.filter((r) => r.Status.startsWith("Gagal")).length },
+    { key: "open", label: "Observasi / belum dijalankan", n: rows.filter((r) => !/^(Lulus|Gagal)/.test(r.Status)).length },
   ];
   const total = rows.length;
   return (

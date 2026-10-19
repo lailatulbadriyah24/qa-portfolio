@@ -1,15 +1,15 @@
-# BUG-005 - Missing required fields cause `500 Internal Server Error`
+# BUG-005 - Field wajib yang hilang menyebabkan `500 Internal Server Error`
 
 | | |
 |---|---|
-| **Severity / Priority** | Major / P1 |
-| **Status** | Open |
-| **Environment** | https://restful-booker.herokuapp.com (public demo) |
-| **Related test case** | TC-CRT-03 |
+| **Severity / Prioritas** | Major / P1 |
+| **Status** | Terbuka |
+| **Lingkungan** | https://restful-booker.herokuapp.com (demo publik) |
+| **Test case terkait** | TC-CRT-03 |
 
-## Steps to reproduce
+## Langkah reproduksi
 
-1. Send:
+1. Kirim:
    ```http
    POST /booking
    Content-Type: application/json
@@ -18,18 +18,18 @@
    { "firstname": "OnlyName" }
    ```
 
-## Expected result
+## Hasil yang diharapkan
 
-`400 Bad Request` listing the missing required fields (`lastname`, `totalprice`, `depositpaid`, `bookingdates`).
+`400 Bad Request` yang menyebutkan field wajib yang hilang (`lastname`, `totalprice`, `depositpaid`, `bookingdates`).
 
-## Actual result
+## Hasil aktual
 
-`500 Internal Server Error` with a generic body.
+`500 Internal Server Error` dengan body yang generik.
 
-## Impact
+## Dampak
 
-A 5xx tells clients the server failed, not that their request was wrong. It pollutes error monitoring and gives API consumers no way to fix the request.
+Kode 5xx memberi tahu client bahwa server yang gagal, bukan permintaannya yang salah. Ini mengotori monitoring error dan membuat pengguna API tidak punya petunjuk untuk memperbaiki permintaannya.
 
-## Suggested fix
+## Saran perbaikan
 
-Validate the request body and return `400` with details instead of letting the exception propagate.
+Validasi body permintaan dan kembalikan `400` beserta rinciannya, bukan membiarkan exception merambat.

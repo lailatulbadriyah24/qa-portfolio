@@ -1,69 +1,69 @@
-# Test Scenarios - Restful-Booker API
+# Skenario Pengujian - Restful-Booker API
 
-High-level scenarios. Detailed steps live in `test-cases.csv`.
+Skenario tingkat tinggi. Langkah rinci ada di `test-cases.csv`.
 
-## TS-AUTH - Authentication (`POST /auth`)
+## TS-AUTH - Autentikasi (`POST /auth`)
 
-| ID | Scenario | Type |
+| ID | Skenario | Jenis |
 |---|---|---|
-| TS-AUTH-01 | A user with valid credentials receives a token | Positive |
-| TS-AUTH-02 | A user with wrong credentials does not receive a token | Negative |
-| TS-AUTH-03 | A request without credentials does not receive a token | Negative |
+| TS-AUTH-01 | Pengguna dengan kredensial valid menerima token | Positif |
+| TS-AUTH-02 | Pengguna dengan kredensial salah tidak menerima token | Negatif |
+| TS-AUTH-03 | Permintaan tanpa kredensial tidak menerima token | Negatif |
 
-## TS-CRT - Create booking (`POST /booking`)
+## TS-CRT - Membuat booking (`POST /booking`)
 
-| ID | Scenario | Type |
+| ID | Skenario | Jenis |
 |---|---|---|
-| TS-CRT-01 | A booking with all valid fields is created and an id is returned | Positive |
-| TS-CRT-02 | A booking without optional fields is created | Positive |
-| TS-CRT-03 | A request with missing required fields is rejected with a client error | Negative |
-| TS-CRT-04 | Field values outside valid ranges (negative price, checkout before checkin) are rejected | Boundary / negative |
-| TS-CRT-05 | Wrong data types and malformed dates are rejected | Negative |
-| TS-CRT-06 | Empty / very long / special-character text is handled safely | Boundary / security |
-| TS-CRT-07 | The request is rejected when the `Accept` header is missing | Negative |
+| TS-CRT-01 | Booking dengan semua field valid berhasil dibuat dan id dikembalikan | Positif |
+| TS-CRT-02 | Booking tanpa field opsional berhasil dibuat | Positif |
+| TS-CRT-03 | Permintaan dengan field wajib yang hilang ditolak dengan error dari sisi client | Negatif |
+| TS-CRT-04 | Nilai field di luar rentang valid (harga negatif, checkout sebelum checkin) ditolak | Batas / negatif |
+| TS-CRT-05 | Tipe data yang salah dan format tanggal yang rusak ditolak | Negatif |
+| TS-CRT-06 | Teks kosong / sangat panjang / berisi karakter khusus ditangani dengan aman | Batas / keamanan |
+| TS-CRT-07 | Permintaan ditolak ketika header `Accept` tidak ada | Negatif |
 
-## TS-GET - Read bookings (`GET /booking`, `GET /booking/{id}`)
+## TS-GET - Membaca booking (`GET /booking`, `GET /booking/{id}`)
 
-| ID | Scenario | Type |
+| ID | Skenario | Jenis |
 |---|---|---|
-| TS-GET-01 | An existing booking can be fetched by id and matches the schema | Positive |
-| TS-GET-02 | A non-existent or malformed id returns 404 | Negative |
-| TS-GET-03 | The booking list returns ids | Positive |
-| TS-GET-04 | The list can be filtered by name and by dates | Positive |
+| TS-GET-01 | Booking yang ada bisa diambil berdasarkan id dan sesuai schema | Positif |
+| TS-GET-02 | Id yang tidak ada atau formatnya salah mengembalikan 404 | Negatif |
+| TS-GET-03 | Daftar booking mengembalikan id | Positif |
+| TS-GET-04 | Daftar bisa difilter berdasarkan nama dan tanggal | Positif |
 
-## TS-UPD - Update booking (`PUT`, `PATCH /booking/{id}`)
+## TS-UPD - Mengubah booking (`PUT`, `PATCH /booking/{id}`)
 
-| ID | Scenario | Type |
+| ID | Skenario | Jenis |
 |---|---|---|
-| TS-UPD-01 | An authenticated user can fully replace a booking | Positive |
-| TS-UPD-02 | An authenticated user can change only some fields | Positive |
-| TS-UPD-03 | A request without or with an invalid token is rejected | Security |
+| TS-UPD-01 | Pengguna yang terautentikasi bisa mengganti seluruh isi booking | Positif |
+| TS-UPD-02 | Pengguna yang terautentikasi bisa mengubah sebagian field saja | Positif |
+| TS-UPD-03 | Permintaan tanpa token atau dengan token tidak valid ditolak | Keamanan |
 
-## TS-DEL - Delete booking (`DELETE /booking/{id}`)
+## TS-DEL - Menghapus booking (`DELETE /booking/{id}`)
 
-| ID | Scenario | Type |
+| ID | Skenario | Jenis |
 |---|---|---|
-| TS-DEL-01 | An authenticated user can delete a booking and it can no longer be fetched | Positive |
-| TS-DEL-02 | An unauthenticated delete is rejected | Security |
-| TS-DEL-03 | Deleting a booking that no longer exists is handled gracefully | Negative |
+| TS-DEL-01 | Pengguna yang terautentikasi bisa menghapus booking, dan booking itu tidak bisa diambil lagi | Positif |
+| TS-DEL-02 | Penghapusan tanpa autentikasi ditolak | Keamanan |
+| TS-DEL-03 | Menghapus booking yang sudah tidak ada ditangani dengan wajar | Negatif |
 
-## TS-E2E - End-to-end flow
+## TS-E2E - Alur end-to-end
 
-| ID | Scenario |
+| ID | Skenario |
 |---|---|
-| TS-E2E-01 | Login -> create booking -> read it -> update it -> partially update it -> delete it -> confirm it is gone (Postman folders 1-5 run in order) |
+| TS-E2E-01 | Login -> buat booking -> baca -> ubah -> ubah sebagian -> hapus -> pastikan sudah hilang (folder Postman 1-5 dijalankan berurutan) |
 
-## TS-NFR - Non-functional
+## TS-NFR - Non-fungsional
 
-| ID | Scenario | Tool |
+| ID | Skenario | Alat |
 |---|---|---|
-| TS-NFR-01 | Key endpoints respond in under 2 s for a single user | Postman assertion |
-| TS-NFR-02 | Under 10 concurrent users, p95 latency and error rate stay within threshold | k6 load test |
-| TS-NFR-03 | Behaviour as load is increased past normal levels (find the breaking point) | k6 stress test |
+| TS-NFR-01 | Endpoint utama merespons dalam waktu kurang dari 2 detik untuk satu pengguna | Assertion Postman |
+| TS-NFR-02 | Dengan 10 pengguna bersamaan, latensi p95 dan tingkat error tetap dalam threshold | Load test k6 |
+| TS-NFR-03 | Perilaku saat beban dinaikkan melewati tingkat normal (mencari titik jenuh) | Stress test k6 |
 
-## Traceability
+## Keterlacakan
 
-| Scenario | Test cases |
+| Skenario | Test case |
 |---|---|
 | TS-AUTH-* | TC-AUTH-01 .. 03 |
 | TS-CRT-* | TC-CRT-01 .. 11 |

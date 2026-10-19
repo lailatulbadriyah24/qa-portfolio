@@ -1,42 +1,47 @@
-# Postman API Tests
+# Tes API dengan Postman
 
-Collection: `RestfulBooker.postman_collection.json` - 22 requests, 41 assertions in the regression folders.
+Collection: `RestfulBooker.postman_collection.json` - 22 request dan 41 assertion di folder regression.
 
-## Folder structure
+## Struktur folder
 
-| Folder | Purpose | Expected result |
+| Folder | Tujuan | Hasil yang diharapkan |
 |---|---|---|
-| 0. Health | `GET /ping` | Pass |
-| 1. Auth | Login (stores `token`), negative logins | Pass |
-| 2. Booking - Create | Valid create (stores `bookingId`), missing header, missing fields, optional fields | Pass |
-| 3. Booking - Read | Get by id with JSON-schema check, 404 cases, list, filter | Pass |
-| 4. Booking - Update | PUT / PATCH with and without token | Pass |
-| 5. Booking - Delete | Delete, verify gone, double delete | Pass |
-| 6. Data-driven | Creates one booking per row in `data/bookings.csv` | Pass |
-| 7. Known defects | Asserts the **correct** behaviour for BUG-001..006 | **Fail on purpose** (documents bugs) |
+| 0. Health | `GET /ping` | Lulus |
+| 1. Auth | Login (menyimpan `token`), login negatif | Lulus |
+| 2. Booking - Create | Create valid (menyimpan `bookingId`), tanpa header, field hilang, field opsional | Lulus |
+| 3. Booking - Read | Get by id dengan pengecekan JSON schema, kasus 404, daftar, filter | Lulus |
+| 4. Booking - Update | PUT / PATCH dengan dan tanpa token | Lulus |
+| 5. Booking - Delete | Hapus, pastikan sudah hilang, hapus dua kali | Lulus |
+| 6. Data-driven | Membuat satu booking untuk setiap baris di `data/bookings.csv` | Lulus |
+| 7. Known defects | Memeriksa perilaku yang **seharusnya** untuk BUG-001..006, dikelompokkan per modul (7.1 Auth, 7.2 Booking - Create) | **Gagal dengan sengaja** (mendokumentasikan bug) |
 
-Folders 0-5 share state (`token`, `bookingId`) and must run in order.
+Folder 0-5 berbagi state (`token`, `bookingId`) dan harus dijalankan berurutan.
 
-## What the tests demonstrate
+Setiap request di folder 7 diberi nama `TC-xxx | BUG-xxx ...`, jadi mencari ID test case (misalnya `TC-CRT-05`) akan menemukannya di sini. `TC-AUTH-02` muncul dua kali dengan sengaja: di folder 1 ia memeriksa perilaku API saat ini (200, tanpa token) supaya regression suite tetap hijau, dan di folder 7 ia memeriksa perilaku yang seharusnya (401), yang gagal dan mendokumentasikan BUG-006.
 
-- Collection variables and chaining (token and id passed between requests)
-- Environment file for the base URL and credentials
-- Status, body, schema (`jsonSchema`) and response-time assertions
-- Positive, negative and security cases (missing or invalid token)
-- Data-driven testing with a CSV file
-- Separating stable regression tests from known defects so CI stays meaningful
+Nama request dan pesan assertion di collection memakai bahasa Inggris, sesuai kebiasaan di Postman. ID test case-nya sama dengan yang ada di `1-test-scenario/test-cases.csv`.
 
-## Run in Postman
+## Yang diperlihatkan oleh tes ini
 
-Import the collection and `environments/public-demo.postman_environment.json`, select the environment, then run the collection (folders 0-5).
+- Variabel collection dan chaining (token dan id dioper antar request)
+- File environment untuk base URL dan kredensial
+- Assertion status, body, schema (`jsonSchema`), dan waktu respons
+- Kasus positif, negatif, dan keamanan (token hilang atau tidak valid)
+- Data-driven testing dengan file CSV
+- Memisahkan regression test yang stabil dari defect yang sudah diketahui supaya CI tetap bermakna
+- Setiap request bisa dikirim sendiri-sendiri: skrip di level collection otomatis login atau membuat booking kalau `token` atau `bookingId` masih kosong
 
-## Run from the command line
+## Menjalankan di Postman
+
+Import collection dan `environments/public-demo.postman_environment.json`, pilih environment-nya, lalu jalankan collection (folder 0-5). Environment tidak wajib: collection punya nilai bawaan untuk `baseUrl`, `username`, dan `password`.
+
+## Menjalankan dari command line
 
 ```bash
 npm install
-npm run test:api          # regression suite + HTML report in 2-postman/reports/
-npm run test:api:data     # data-driven folder with bookings.csv
-npm run test:api:defects  # known defects (will report failures, by design)
+npm run test:api          # regression suite + laporan HTML di 2-postman/reports/
+npm run test:api:data     # folder data-driven dengan bookings.csv
+npm run test:api:defects  # known defect (akan melaporkan kegagalan, memang disengaja)
 ```
 
-The public demo credentials in the environment file are the ones published by the API's authors, not secrets.
+Kredensial demo publik di file environment adalah kredensial yang dipublikasikan oleh pembuat API-nya, bukan rahasia.

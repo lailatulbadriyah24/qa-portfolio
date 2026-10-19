@@ -5,3 +5,6 @@ site/.next/
 site/out/
 site/dev.log
 site/AGENTS.md
+
+# Excel lock files
+~$*
